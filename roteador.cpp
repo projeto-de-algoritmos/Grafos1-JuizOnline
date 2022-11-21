@@ -2,47 +2,64 @@
 
 using namespace std;
 
-int main()
+struct s_no
+{
+    int v;
+    int w;
+    int p;
+} typedef no;
+
+no g[205];
+int p[65];
+
+int compare(const void *a, const void *b)
+{
+    return ((no *)a)->p - ((no *)b)->p;
+}
+
+int filho(int i)
+{
+    if (i == p[i])
+        return i;
+    return filho(p[i]);
+}
+
+int kruskal(int c)
+{
+    int i, agm, v, w;
+
+    for (i = 0, agm = 0; i < c; i++)
+    {
+        v = filho(g[i].v);
+        w = filho(g[i].w);
+
+        if (v != w)
+        {
+            p[v] = p[w];
+            agm += g[i].p;
+        }
+    }
+
+    return agm;
+}
+
+int main(void)
 {
 
-    int r = 0;
-    int c = 0;
-    int grafo[61][201];
-    int copia[61][201];
-    int aux[61][201];
-    int valor = 0;
-    cin >> r >> c;
+    int r, c, i;
 
-    for (int i = 0; i < c; i++)
+    scanf("%d %d", &r, &c);
+
+    for (i = 0; i < c; i++)
     {
-        for (int j = 0; j < 3; j++)
-        {
-            cin >> grafo[i][j];
-            copia[i][j] = grafo[i][j];
-        }
-    }
-    copia[0][0] = grafo[0][0];
-    copia[0][1] = grafo[0][1];
-    copia[0][2] = grafo[0][2];
-    int j = 0;
-    for (int i = 1; i < c; i++)
-    {
-        if (grafo[i][0] == copia[i - 1][0])
-        {
-            if (grafo[i][2] < copia[i - 1][2])
-            {
-                aux[j][2] = grafo[i][2];
-            }
-        }
-        else
-            j++;
+        scanf("%d %d %d", &g[i].v, &g[i].w, &g[i].p);
     }
 
-    for (int j = 0; j < r; j++)
-    {
-        valor += aux[j][2];
-        // cout << copia[i][2] << endl;
-    }
-    cout << valor << endl;
+    qsort(g, c, sizeof(no), compare);
+    for (i = 1; i <= r; i++)
+        p[i] = i;
+
+    printf("%d\n", kruskal(c));
+
     return 0;
 }
